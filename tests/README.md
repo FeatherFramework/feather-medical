@@ -1,6 +1,10 @@
 # Medical lifecycle checks
 
 Run `lua tests/run.lua` from the Medical repository root (Lua 5.4).
+The aggregate runner includes the persisted client lifecycle regression. The
+observer input harness loads lifecycle before observer, matching the manifest,
+and uses session-bound condition snapshots; it still tests input without the
+former standalone MedicalInput helper.
 Tests exercise episode deduplication, configurable lethal handling, offline
 deadlines, explicit doctor eligibility and stale recovery rejection.
 The storage harness also checks migration reruns/drift/failure and transactional

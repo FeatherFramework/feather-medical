@@ -4,17 +4,17 @@ Feather Medical lets players wait for help after dying or choose to respawn at
 the nearest hospital after a timer ends. Staff can also revive players through
 Feather Admin. The timer does not automatically respawn anyone.
 
-Version: **0.1.0**.
+Version: **0.1.1**.
 
 ## Before you install
 
 You need a working Feather server with these resources installed:
 
-- feather-mysql — the database resource Medical uses.
+- feather-mysql â€” the database resource Medical uses.
 - feather-core
 - feather-toolkit
-- feather-character — use the updated version with Medical support.
-- feather-admin — use the updated version with Medical support for staff revive.
+- feather-character â€” use the updated version with Medical support.
+- feather-admin â€” use the updated version with Medical support for staff revive.
 
 Keep the other resources your Character system already needs. Older Character
 or Admin versions may not work with this Medical version.

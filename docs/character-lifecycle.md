@@ -1,5 +1,24 @@
 # Medical client lifecycle adapter
 
+## Shared-pool native Weapons acceptance
+
+The existing adapter also passed scoped shared-pool Weapons testing on
+2026-10-11: persisted death sealed the native ammo runtime, and acknowledged
+doctor recovery restored it in a fresh epoch without reopening Inventory panels.
+In the one-carried-Regular-round case, recovery retained that round at ledger16;
+unloading afterward returned it to loose Inventory at ledger17. A separate
+zero-carried case remained ledger21 across dead revision5/alive revision6.
+Final Inventory verification confirmed the expected saved equipment, loose ammo
+and receipts. No per-weapon ammo quantities or Medical-owned ammo writes were
+introduced. These are narrow live gates, not exhaustive final-shot/in-flight
+lifecycle races, abnormal resource-stop or multiplayer acceptance.
+
+Local regression: `lua tests/client_lifecycle_spec.lua` from the Medical resource
+root verifies identity/revision rejection, notification deduplication and copy
+isolation. Medical's existing server condition/recovery authority is unchanged.
+
+## Adapter contract and earlier acceptance
+
 Medical adapts its existing medical.condition.get.v1 and recovery.ack.v1
 snapshots into a client cache. Alive recovery is published after successful
 server acknowledgment, not after native resurrection alone. Snapshots carry

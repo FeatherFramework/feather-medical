@@ -7,6 +7,7 @@ exports = {
     ['feather-character'] = {GetMedicalContext = function() return {sessionId = 'session', characterId = 'character'} end},
     ['feather-core'] = {CallRPCAsync = function(_, name)
         if name == 'medical.condition.get.v1' then return {ok = true, value = {
+            characterId = 'character', sessionId = 'session',
             lifeState = 'dead', revision = 1, doctorAvailableAt = deadline, serverTime = 2}} end
         if name == 'medical.recovery.pending.v1' then return {ok = true, value = {pending = false}} end
         assert(name == 'medical.recovery.doctor.request.v1')
@@ -20,6 +21,7 @@ Wait = function() coroutine.yield() end
 RegisterCommand = function(name, fn) commands[name] = fn end
 AddEventHandler = function() end
 SendNUIMessage = function() end
+TriggerEvent = function() end
 GetResourceState = function() return 'started' end
 GetGameTimer = function() return 0 end
 PlayerPedId = function() return 10 end
@@ -32,7 +34,8 @@ EnableControlAction = function(_, control, active) assert(control == 123 and act
 IsControlJustPressed = function() return enabled and pressed and 1 or 0 end
 IsDisabledControlJustPressed = function() return pressed and 1 or 0 end
 json = {encode = function() return '{}' end}
-MedicalInput = nil -- Reproduce the live missing-helper failure; observer must stand alone.
+MedicalInput = nil -- Observer input remains independent of the old input helper.
+dofile('client/lifecycle.lua') -- Match the manifest's lifecycle-before-observer order.
 dofile('client/observer.lua')
 local function tick(index) local ok, err = coroutine.resume(threads[index]); assert(ok, err) end
 tick(1); tick(1); tick(1) -- stable world ped, persisted dead snapshot, expired deadline
