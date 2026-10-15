@@ -1,5 +1,9 @@
 # Feather Medical
 
+Weapons integration: server `ReadNativeWeaponCondition(source, context)` is a
+read-only, Weapons-only current-session condition snapshot for the scoped native
+death-wear seal. It performs no initialization, recovery or lifecycle mutation.
+
 Feather Medical lets players wait for help after dying or choose to respawn at
 the nearest hospital after a timer ends. Staff can also revive players through
 Feather Admin. The timer does not automatically respawn anyone.

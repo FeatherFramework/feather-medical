@@ -84,6 +84,24 @@ remain separate acceptance gates; offline mocks do not prove those scenarios.
 
 ## Boundaries and integrations
 
+### Weapons condition reader (0.1.1 follow-up)
+
+Server export `ReadNativeWeaponCondition(source, context)` is restricted to
+`feather-weapons`. Supply a positive integer player source and the current
+`characterId`/`sessionId`. Medical checks Core and Character readiness both before
+and after reading storage, then returns `{ok=true,value=snapshot}`. Rejections
+return `{ok=false,code=...}`: `forbidden`, `stale_session`,
+`storage_unavailable`, or `condition_missing`.
+
+This reader never initializes missing records, advances deadlines, authorizes
+recovery or writes life state. It does not transfer Medical authority to Weapons.
+The gameplay harness covers caller/input rejection, disabled Medical, stale
+sessions (including changes during storage), missing conditions, storage errors
+and unchanged lifecycle-write counters. The full Lua 5.4 aggregate suite and
+Node UI check passed during PR preparation on 2026-10-14. Reported live Weapons
+death-final-wear/doctor recovery acceptance is recorded in the framework Medical
+master plan; interrupted recovery and multiplayer races remain separate gates.
+
 Medical owns life state, episodes and recovery. Status owns metabolism. Character
 owns appearance and ped placement. Loot access is deferred; this resource does not
 enable looting or tied-player access. Incapacitated mode currently uses the proven

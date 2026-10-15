@@ -107,4 +107,30 @@ GetEntityCoords = function() return {x = 10, y = 0, z = 0} end
 check('nearest hospital uses server ped position', G.RequestDoctor(1, target).ok and lastDestination.id == 'near')
 GetPlayerPed = function() return 0 end
 check('missing server ped cannot select a hospital', G.RequestDoctor(1, target).code == 'position_unavailable')
+caller='foreign-resource'
+check('weapon condition reader rejects foreign caller',callbacks.ReadNativeWeaponCondition(1,target).code=='forbidden')
+caller='feather-weapons'; ready=true; missing=false
+local beforeReads={initialized,resets,completions,begun}
+local condition=callbacks.ReadNativeWeaponCondition(1,target)
+check('weapon condition reader returns current stored condition',condition.ok and condition.value.revision==record.revision
+    and condition.value.lifeState==record.lifeState and condition.value.sessionId==target.sessionId)
+check('weapon condition reader has no lifecycle writes',initialized==beforeReads[1] and resets==beforeReads[2]
+    and completions==beforeReads[3] and begun==beforeReads[4])
+check('weapon condition reader rejects stale session',callbacks.ReadNativeWeaponCondition(1,old).code=='stale_session')
+local get=MedicalRepository.Get
+MedicalRepository.Get=function(...) local value=get(...); ready=false; return value end
+check('weapon condition reader rechecks after storage yield',callbacks.ReadNativeWeaponCondition(1,target).code=='stale_session')
+MedicalRepository.Get=get; ready=true
+check('weapon condition reader rejects malformed context',callbacks.ReadNativeWeaponCondition(1,{}).code=='forbidden')
+check('weapon condition reader rejects invalid source',callbacks.ReadNativeWeaponCondition(0,target).code=='forbidden')
+missing=true
+check('weapon condition reader never initializes missing condition',callbacks.ReadNativeWeaponCondition(1,target).code=='condition_missing'
+    and initialized==beforeReads[1])
+missing=false
+MedicalRepository.Get=function() error('storage offline') end
+check('weapon condition reader reports storage failure',callbacks.ReadNativeWeaponCondition(1,target).code=='storage_unavailable')
+MedicalRepository.Get=get
+Config.medical.enabled=false
+check('weapon condition reader rejects disabled Medical',callbacks.ReadNativeWeaponCondition(1,target).code=='stale_session')
+Config.medical.enabled=true
 print(('PASS %d gameplay service harness checks'):format(count))

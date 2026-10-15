@@ -6,7 +6,7 @@ lua54 'yes'
 name 'feather-medical'
 description 'A RedM medical system for Feather Framework'
 author 'BCC Scripts'
-version '0.1.1'
+version '0.1.2'
 
 ui_page 'web/index.html'
 files {'web/index.html', 'web/style.css', 'web/app.js'}
